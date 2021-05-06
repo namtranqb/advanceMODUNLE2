@@ -30,6 +30,14 @@ public class Contact {
         this.email = email;
     }
 
+    public Contact(String contactGroup, String fullName, String dob, String address, String email) {
+        this.contactGroup = contactGroup;
+        this.fullName = fullName;
+        this.dob = dob;
+        this.address = address;
+        this.email = email;
+    }
+
     public int getSerialContact(){
         return serialContact;
     }
@@ -87,7 +95,7 @@ public class Contact {
     }
 
     public String toStringCSV(){
-        return serialContact+","+phoneNumber+","+contactGroup+","+fullName+","+dob+","+address+","+email;
+        return serialContact+","+phoneNumber+","+contactGroup+","+fullName+","+dob+","+address+","+email+"\n";
     }
 
     public void displayContact(){
@@ -98,4 +106,5 @@ public class Contact {
         System.out.printf("|| %11s | %20s | %30s | %11s | %30s ||",phoneNumber,contactGroup,fullName,dob,address);
         System.out.println();
     }
+
 }

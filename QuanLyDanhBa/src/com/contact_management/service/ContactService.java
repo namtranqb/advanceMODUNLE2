@@ -15,9 +15,19 @@ public class ContactService {
         contactDB.write();
     }
 
-    public void readFromFile() {
+    public void loadFromFile(){
         contactDB.read();
     }
+
+    public void readFromFile() {
+        displayHeader();
+        for (Contact ct: contactDB.contactList
+             ) {
+            ct.displayContact();
+        }
+
+    }
+
 
     public void searchContact() {
         boolean check = false;
@@ -37,16 +47,17 @@ public class ContactService {
 
     public void deleteContact() {
         boolean check = false;
-        System.out.println("Nhap SDT tim kiem: ");
+        System.out.println("Nhap SDT can xoa: ");
         String phoneNumber = sc.nextLine();
-        for (Contact ct: contactDB.contactList) {
-            if(ct.getPhoneNumber().equals(phoneNumber)){
+        for (int i = 0; i < contactDB.contactList.size(); i++) {
+            if(contactDB.contactList.get(i).getPhoneNumber().equals(phoneNumber)){
                 check = true;
-                contactDB.contactList.remove(ct);
+                Contact temp = contactDB.contactList.get(i);
+                contactDB.contactList.remove(contactDB.contactList.get(i));
                 contactDB.write();
                 displayHeader();
-                ct.displayContact();
-                System.out.println("Ban vua xoa <"+ct.getFullName()+"> khoi danh ba !");
+                temp.displayContact();
+                System.out.println("Ban vua xoa <"+temp.getFullName()+"> khoi danh ba !");
 
             }
         }
@@ -56,8 +67,8 @@ public class ContactService {
     }
 
     public void updateContact() {
-        boolean check = false;
         System.out.println("Nhap SDT tim kiem: ");
+        boolean check = false;
         String phoneNumber = sc.nextLine();
         for (Contact ct: contactDB.contactList) {
             if(ct.getPhoneNumber().equals(phoneNumber)){
@@ -71,7 +82,6 @@ public class ContactService {
                 displayHeader();
                 ct.displayContact();
                 System.out.println("Ban vua cap nhat <"+ct.getFullName()+"> vao danh ba !");
-
             }
         }
         if(!check){
@@ -114,11 +124,11 @@ public class ContactService {
                             break;
                         default:
                             System.out.println("Exit !");
-                            System.exit(0);
-
+                            return;
                     }
                 }
             }
+
         }
 
     }
@@ -128,15 +138,35 @@ public class ContactService {
         do{
             System.out.println("Nhap SDT: ");
             phoneNumber = sc.nextLine();
-        }while (!checkPhoneNumber(phoneNumber));
-        for (Contact ct: contactDB.contactList) {
-            if(ct.getPhoneNumber().equals(phoneNumber)){
-                System.out.println("Trung SDT !");
-                inputPhoneNumber();
-            }
-        }
+
+        }while (!checkPhoneNumber(phoneNumber) || checkPhoneNumberExists(phoneNumber));
+
         return phoneNumber;
     }
+
+
+    public boolean checkPhoneNumberExists(String phoneNumber){
+        for (Contact ct: contactDB.contactList) {
+            if(ct.getPhoneNumber().equals(phoneNumber)){
+                System.out.println("Da ton tai trong danh ba !");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkEmailExists(String email){
+        for (Contact ct: contactDB.contactList) {
+            if(ct.getEmail().equals(email) ){
+                System.out.println("Da ton tai trong danh ba !");
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
     public boolean checkPhoneNumber(String phoneNumber){
         String regex = "^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$";
         Pattern pattern = Pattern.compile(regex);
@@ -185,12 +215,14 @@ public class ContactService {
         String address = toUpperCase(sc.nextLine());
         return address;
     }
+
+
     public String inputEmail(){
         String email;
         do{
             System.out.println("Nhap email: ");
             email = sc.nextLine();
-        }while (!checkEmail(email));
+        }while (!checkEmail(email) || checkEmailExists(email));
 
         return email;
     }
@@ -224,12 +256,12 @@ public class ContactService {
     }
 
     public void displayHeader(){
-        System.out.printf("|| %11s | %20s | %30s | %11s | %30s | %25s ||","So DT","Nhom danh ba","Ho ten","Ngay sinh","Dia chi","Email");
+        System.out.printf("|  %11s | %20s | %30s | %11s | %30s | %25s  |","So DT","Nhom danh ba","Ho ten","Ngay sinh","Dia chi","Email");
         System.out.println();
     }
 
     public void displayHeaderNonEmail(){
-        System.out.printf("|| %11s | %20s | %30s | %11s | %30s ||","So DT","Nhom danh ba","Ho ten","Ngay sinh","Dia chi");
+        System.out.printf("|  %11s | %20s | %30s | %11s | %30s  |","So DT","Nhom danh ba","Ho ten","Ngay sinh","Dia chi");
         System.out.println();
     }
 }
